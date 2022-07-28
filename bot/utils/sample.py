@@ -65,7 +65,7 @@ class Sample:
 
                 start_at = self.get_random_start_at(reduced_sec, sample_duration)
 
-                sample_file = output_folder.joinpath(f'sample_video.mkv')
+                sample_file = output_folder.joinpath('sample_video.mkv')
                 subtitle_option = await self.fix_subtitle_codec(file_link)
 
                 log.info(f"Generating sample video (duration {sample_duration}s from {start_at}) from location: {file_link} for {chat_id}")
@@ -91,7 +91,10 @@ class Sample:
 
                 thumb = await self.generate_thumbnail_file(sample_file, uid)
 
-                await m.edit_message_text(text=f'🤓 Sample video was generated successfully!, Now starting to upload!')
+                await m.edit_message_text(
+                    text='🤓 Sample video was generated successfully!, Now starting to upload!'
+                )
+
 
                 await media_msg.reply_chat_action("upload_video")
 

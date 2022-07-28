@@ -39,21 +39,28 @@ async def broadcast_(c, m):
     broadcast_msg = m.reply_to_message
 
     while True:
-        broadcast_id = ''.join([random.choice(string.ascii_letters) for i in range(3)])
+        broadcast_id = ''.join([random.choice(string.ascii_letters) for _ in range(3)])
         if not c.broadcast_ids.get(broadcast_id):
             break
 
     out = await m.reply_text(
-        text = f"Broadcast initiated! You will be notified with log file when all the users are notified.",
-        reply_markup = InlineKeyboardMarkup(
+        text="Broadcast initiated! You will be notified with log file when all the users are notified.",
+        reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("Cancel Broadcast", callback_data=f"cncl_bdct+{broadcast_id}"),
-                    InlineKeyboardButton("View broadcast status", callback_data=f"sts_bdct+{broadcast_id}")
+                    InlineKeyboardButton(
+                        "Cancel Broadcast",
+                        callback_data=f"cncl_bdct+{broadcast_id}",
+                    ),
+                    InlineKeyboardButton(
+                        "View broadcast status",
+                        callback_data=f"sts_bdct+{broadcast_id}",
+                    ),
                 ]
             ]
-        )
+        ),
     )
+
     start_time = time.time()
     total_users = await c.db.total_users_count()
     done = 0

@@ -96,7 +96,7 @@ class Trim:
 
                 log.info(f"Trimming video (duration {request_duration}s from {start}) from location: {file_link} for {chat_id}")
 
-                sample_file = output_folder.joinpath(f'trim_video.mkv')
+                sample_file = output_folder.joinpath('trim_video.mkv')
                 subtitle_option = await self.fix_subtitle_codec(file_link)
 
                 ffmpeg_cmd = ['ffmpeg', '-headers', f'IAM:{Config.IAM_HEADER}', '-hide_banner', '-ss', str(start), '-i', file_link, '-t',

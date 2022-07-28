@@ -28,7 +28,7 @@ async def settings_cb(c, m):
 
     elif typ == 'sv':
         sample_duration = await c.db.get_sample_duration(chat_id)
-        if sample_duration+30 >=180:
+        if sample_duration >= 150:
             sample_duration = 0
         sample_duration += 30
         await c.db.update_sample_duration(chat_id, sample_duration)
@@ -44,10 +44,7 @@ async def settings_cb(c, m):
 
     elif typ == 'sm':
         screenshot_mode = await c.db.get_screenshot_mode(chat_id)
-        if screenshot_mode == 0:
-            screenshot_mode = 1
-        else:
-            screenshot_mode = 0
+        screenshot_mode = 1 if screenshot_mode == 0 else 0
         await c.db.update_screenshot_mode(chat_id, screenshot_mode)
         alert_text = 'Successfully changed screenshot generation mode'
 
