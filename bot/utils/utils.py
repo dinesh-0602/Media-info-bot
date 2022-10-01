@@ -26,9 +26,13 @@ class CommonUtils:
             return False
         if msg.video:
             return True
-        if (msg.document) and any(mime in msg.document.mime_type for mime in ['video', "application/octet-stream"]):
-            return True
-        return False
+        return bool(
+            (msg.document)
+            and any(
+                mime in msg.document.mime_type
+                for mime in ['video', "application/octet-stream"]
+            )
+        )
 
     @staticmethod
     def is_url(text):
@@ -56,9 +60,7 @@ class CommonUtils:
         ffmpeg_cmd = ['ffmpeg', '-ss', '0', '-i', file_path, '-vframes', '1', '-vf', 'scale=320:-1', '-y', str(thumb_file)]
         output = await CommonUtils.run_subprocess(ffmpeg_cmd)
         log.debug(output)
-        if not thumb_file.exists():
-            return None
-        return thumb_file
+        return thumb_file if thumb_file.exists() else None
 
     @staticmethod
     def generate_stream_link(media_msg):
@@ -93,13 +95,10 @@ class CommonUtils:
                           'format=duration', '-of', 'csv=p=0:s=x', '-select_streams', 'v:0', ]
         out, err = await CommonUtils.run_subprocess(ffmpeg_dur_cmd)
         log.debug(f"{out} \n {err}")
-        out = out.decode().strip()
-        if not out:
+        if out := out.decode().strip():
+            return duration if (duration := round(float(out))) else 'No duration!'
+        else:
             return err.decode()
-        duration = round(float(out))
-        if duration:
-            return duration
-        return 'No duration!'
 
     @staticmethod
     async def fix_subtitle_codec(file_link):
@@ -126,7 +125,7 @@ class CommonUtils:
     def get_watermark_coordinates(pos, width, height):
 
         def ratio(x, y):
-            gcd = lambda m,n: m if not n else gcd(n,m%n)
+            gcd = lambda m,n: gcd(n,m%n) if n else m
             d = gcd(x, y)
             return x/d, y/d
 
@@ -239,7 +238,12 @@ class CommonUtils:
                 i_keyboard = []
             if i==10:
                 btns.append(i_keyboard)
-        btns.append([InlineKeyboardButton('Manual Screenshots!', 'mscht')])
-        btns.append([InlineKeyboardButton('Trim Video!', 'trim')])
-        btns.append([InlineKeyboardButton('Get Media Information', 'mi')])
+        btns.extend(
+            (
+                [InlineKeyboardButton('Manual Screenshots!', 'mscht')],
+                [InlineKeyboardButton('Trim Video!', 'trim')],
+                [InlineKeyboardButton('Get Media Information', 'mi')],
+            )
+        )
+
         return btns

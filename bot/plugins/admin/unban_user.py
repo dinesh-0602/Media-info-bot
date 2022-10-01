@@ -24,10 +24,7 @@ async def unban(c, m):
         unban_log_text = f"Unbanning user {user_id}"
 
         try:
-            await c.send_message(
-                user_id,
-                f"Your ban was lifted!"
-            )
+            await c.send_message(user_id, "Your ban was lifted!")
             unban_log_text += '\n\nUser notified successfully!'
         except Exception as e:
             log.debug(e, exc_info=True)
